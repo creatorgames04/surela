@@ -8,7 +8,7 @@
 <body>
   <div class="container my-5">
     <h1>Contactez-nous</h1>
-    <form>
+    <form id="contactForm">
       <div class="mb-3">
         <label for="nom" class="form-label">Nom</label>
         <input type="text" class="form-control" id="nom" required>
@@ -27,9 +27,23 @@
     <a href="index.html" class="btn btn-outline-secondary mt-4">Retour à l'accueil</a>
   </div>
   <script>
-    document.querySelector('form').onsubmit = function(e) {
+    document.getElementById('contactForm').onsubmit = async function(e) {
       e.preventDefault();
-      document.getElementById('confirmation').textContent = "Votre message a été envoyé ! (Simulation)";
+      const nom = document.getElementById('nom').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+
+      const payload = {
+        content: `📧 **Nouveau contact reçu**\n**Nom** : ${nom}\n**Email** : ${email}\n**Message** : ${message}`
+      };
+
+      await fetch('https://discord.com/api/webhooks/1409116475385446420/y-K-1oBp7VF5afqH3_oYochCTl8ME0z9tILev7SN0-ivptcpERgRoQI5eOETJWfPUXCi', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      document.getElementById('confirmation').textContent = "Votre message a été envoyé !";
       this.reset();
     }
   </script>

@@ -22,6 +22,7 @@
       </div>
       <button type="submit" class="btn btn-primary">Envoyer</button>
     </form>
+    <div id="confirmation" class="mt-3 text-success"></div>
     <a href="index.html" class="btn btn-outline-secondary">Retour à l'accueil</a>
   </div>
   <script>
@@ -38,16 +39,28 @@
         </div>`
       ).join('');
     }
-    document.getElementById('avis-form').onsubmit = function(e) {
+    document.getElementById('avis-form').onsubmit = async function(e) {
       e.preventDefault();
       const nom = this.nom.value.trim();
       const message = this.message.value.trim();
       if(nom && message) {
+        // Ajoute dans localStorage (pour affichage local)
         const avis = JSON.parse(localStorage.getItem('surela_avis') || '[]');
         avis.unshift({nom, message});
         localStorage.setItem('surela_avis', JSON.stringify(avis));
-        this.reset();
         afficherAvis();
+
+        // Envoie sur Discord
+        const payload = {
+          content: `📢 **Nouvel avis client**\n**Nom** : ${nom}\n**Avis** : ${message}`
+        };
+        await fetch('https://discord.com/api/webhooks/1409116433807441950/KOJnDkPk6wC96-O5upYiHXQSyA4bPyVnOc_gDVpIkMOzGDkD4RAo7vZ1OXIsd6a0wdzs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        document.getElementById('confirmation').textContent = "Merci pour votre avis !";
+        this.reset();
       }
     }
     afficherAvis();
