@@ -11,15 +11,15 @@
     <form id="contactForm">
       <div class="mb-3">
         <label for="nom" class="form-label">Nom</label>
-        <input type="text" class="form-control" id="nom" required>
+        <input type="text" class="form-control" id="nom" name="nom" required>
       </div>
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" required>
+        <input type="email" class="form-control" id="email" name="email" required>
       </div>
       <div class="mb-3">
         <label for="message" class="form-label">Votre message</label>
-        <textarea class="form-control" id="message" rows="4" required></textarea>
+        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
       </div>
       <button type="submit" class="btn btn-success">Envoyer</button>
     </form>
@@ -34,17 +34,20 @@
       const message = document.getElementById('message').value;
 
       const payload = {
-        content: `📧 **Nouveau contact reçu**\n**Nom** : ${nom}\n**Email** : ${email}\n**Message** : ${message}`
+        content: `📧 **Nouveau contact reçu**\n**Nom**: ${nom}\n**Email**: ${email}\n**Message**: ${message}`
       };
 
-      await fetch('https://discord.com/api/webhooks/1409116475385446420/y-K-1oBp7VF5afqH3_oYochCTl8ME0z9tILev7SN0-ivptcpERgRoQI5eOETJWfPUXCi', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      document.getElementById('confirmation').textContent = "Votre message a été envoyé !";
-      this.reset();
+      try {
+        await fetch('https://discord.com/api/webhooks/1409116475385446420/y-K-1oBp7VF5afqH3_oYochCTl8ME0z9tILev7SN0-ivptcpERgRoQI5eOETJWfPUXCi', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        document.getElementById('confirmation').textContent = "Votre message a été envoyé !";
+        this.reset();
+      } catch (err) {
+        document.getElementById('confirmation').textContent = "Erreur lors de l'envoi. Réessayez plus tard.";
+      }
     }
   </script>
 </body>

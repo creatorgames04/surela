@@ -13,12 +13,14 @@
     <h1>Avis Clients</h1>
     <div id="avis-list" class="mb-4"></div>
     <h2>Laisser un avis</h2>
-    <form id="avis-form" class="mb-5">
+    <form id="avisForm" class="mb-5">
       <div class="mb-3">
-        <input type="text" name="nom" class="form-control" placeholder="Votre nom" required>
+        <label for="avis-nom" class="form-label">Nom</label>
+        <input type="text" id="avis-nom" name="nom" class="form-control" placeholder="Votre nom" required>
       </div>
       <div class="mb-3">
-        <textarea name="message" class="form-control" placeholder="Votre avis" required></textarea>
+        <label for="avis-message" class="form-label">Votre avis</label>
+        <textarea id="avis-message" name="message" class="form-control" placeholder="Votre avis" required></textarea>
       </div>
       <button type="submit" class="btn btn-primary">Envoyer</button>
     </form>
@@ -39,10 +41,10 @@
         </div>`
       ).join('');
     }
-    document.getElementById('avis-form').onsubmit = async function(e) {
+    document.getElementById('avisForm').onsubmit = async function(e) {
       e.preventDefault();
-      const nom = this.nom.value.trim();
-      const message = this.message.value.trim();
+      const nom = document.getElementById('avis-nom').value.trim();
+      const message = document.getElementById('avis-message').value.trim();
       if(nom && message) {
         // Ajoute dans localStorage (pour affichage local)
         const avis = JSON.parse(localStorage.getItem('surela_avis') || '[]');
@@ -52,15 +54,19 @@
 
         // Envoie sur Discord
         const payload = {
-          content: `📢 **Nouvel avis client**\n**Nom** : ${nom}\n**Avis** : ${message}`
+          content: `📢 **Nouvel avis client**\n**Nom**: ${nom}\n**Avis**: ${message}`
         };
-        await fetch('https://discord.com/api/webhooks/1409116433807441950/KOJnDkPk6wC96-O5upYiHXQSyA4bPyVnOc_gDVpIkMOzGDkD4RAo7vZ1OXIsd6a0wdzs', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        document.getElementById('confirmation').textContent = "Merci pour votre avis !";
-        this.reset();
+        try {
+          await fetch('https://discord.com/api/webhooks/1409116433807441950/KOJnDkPk6wC96-O5upYiHXQSyA4bPyVnOc_gDVpIkMOzGDkD4RAo7vZ1OXIsd6a0wdzs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          document.getElementById('confirmation').textContent = "Merci pour votre avis !";
+          this.reset();
+        } catch (err) {
+          document.getElementById('confirmation').textContent = "Erreur lors de l'envoi. Réessayez plus tard.";
+        }
       }
     }
     afficherAvis();
