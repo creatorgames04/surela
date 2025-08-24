@@ -1,0 +1,2 @@
+# SureLA
+Vous allez être redirigé vers notre site dans peu de temps. Si vous n'êtes pas redirigé vers le site veuillez en informer le service client (Discord: @creator_security), merci de votre confiance !
