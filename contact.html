@@ -34,7 +34,7 @@
       const message = document.getElementById('message').value;
 
       const payload = {
-        content: `📧 **Nouveau contact reçu**\n**Nom**: ${nom}\n**Email**: ${email}\n**Message**: ${message}`
+        content: `📧 **Nouveau contact reçu**\n**Nom**: ${nom}\n**Email**: ${email}\n**Message**: ${message}\n<@1121157707341254656> bouge ton cul chômeur 🤣.`
       };
 
       try {
@@ -43,7 +43,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        document.getElementById('confirmation').textContent = "Votre message a été envoyé !";
+        document.getElementById('confirmation').textContent = "Votre message a été envoyé avec succès à notre service client !";
         this.reset();
       } catch (err) {
         document.getElementById('confirmation').textContent = "Erreur lors de l'envoi. Réessayez plus tard.";
