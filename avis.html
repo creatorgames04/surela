@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Avis Clients - SureLA</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css">
+  <style>
+    .avis-card { margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="container my-5">
+    <h1>Avis Clients</h1>
+    <div id="avis-list" class="mb-4"></div>
+    <h2>Laisser un avis</h2>
+    <form id="avis-form" class="mb-5">
+      <div class="mb-3">
+        <input type="text" name="nom" class="form-control" placeholder="Votre nom" required>
+      </div>
+      <div class="mb-3">
+        <textarea name="message" class="form-control" placeholder="Votre avis" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Envoyer</button>
+    </form>
+    <a href="index.html" class="btn btn-outline-secondary">Retour à l'accueil</a>
+  </div>
+  <script>
+    // Affichage des avis en localStorage
+    function afficherAvis() {
+      const avisList = document.getElementById('avis-list');
+      const avis = JSON.parse(localStorage.getItem('surela_avis') || '[]');
+      avisList.innerHTML = avis.map(a =>
+        `<div class="card avis-card">
+          <div class="card-body">
+            <h5 class="card-title">${a.nom}</h5>
+            <p class="card-text">${a.message}</p>
+          </div>
+        </div>`
+      ).join('');
+    }
+    document.getElementById('avis-form').onsubmit = function(e) {
+      e.preventDefault();
+      const nom = this.nom.value.trim();
+      const message = this.message.value.trim();
+      if(nom && message) {
+        const avis = JSON.parse(localStorage.getItem('surela_avis') || '[]');
+        avis.unshift({nom, message});
+        localStorage.setItem('surela_avis', JSON.stringify(avis));
+        this.reset();
+        afficherAvis();
+      }
+    }
+    afficherAvis();
+  </script>
+</body>
+</html>
